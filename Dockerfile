@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 FROM scratch
 WORKDIR /app
 COPY --from=gobuilder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=gobuilder /usr/local/go/src/github.com/app/main /app
+COPY --from=gobuilder /go/src/app/main /app
 COPY --from=web /usr/src/build /app/wwwroot
 EXPOSE 1323
 CMD ["/app/main"]
