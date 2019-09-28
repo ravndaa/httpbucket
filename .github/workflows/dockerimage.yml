@@ -3,6 +3,7 @@ name: Docker Image CI
 on: [push]
 
 jobs:
+  
 
   build:
  
@@ -11,8 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ravndal/spuky:$(date +%s)
+      run: docker build . --file Dockerfile --tag ravndal/spuky:latest
     - name: Docker Login
       run: docker login -u ${{secrets.dockerhubuser}} -p ${{secrets.dockerhubpass}}
     - name: Dcoker Push
-      run: docker push ravndal/spuky:$(date +%s)
+      run: docker push ravndal/spuky:latest
