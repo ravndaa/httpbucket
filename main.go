@@ -68,7 +68,7 @@ func main() {
 	//e.POST("/sendmsg", sendMsg)
 	bucket := e.Group("/bucket")
 	bucket.POST("/:id", handlePost)
-	bucket.GET("/:id", handleGet)
+	bucket.GET("/:id", handlePost)
 	bucket.GET("/ws", handleWs)
 	/*
 		e.POST("/bucket/:id", handlePost)
@@ -85,6 +85,7 @@ func main() {
 	e.Logger.Debug(e.Start(":1323"))
 }
 
+/*
 func handleGet(c echo.Context) error {
 	data := c.Param("id")
 
@@ -112,7 +113,7 @@ func handleGet(c echo.Context) error {
 	hub.clients[data].send <- []byte(reqJSON)
 	return c.String(200, data)
 }
-
+*/
 func handlePost(c echo.Context) error {
 	data := c.Param("id")
 
@@ -120,6 +121,9 @@ func handlePost(c echo.Context) error {
 
 		return nil
 	}
+
+	// Handle IP, often used behind proxy. checked with traefik
+	realip := c.Request().Header.Get("X-Forwarded-For")
 
 	body2, _ := ioutil.ReadAll(c.Request().Body)
 
@@ -130,7 +134,7 @@ func handlePost(c echo.Context) error {
 		Host:     c.Request().Host,
 		Method:   c.Request().Method,
 		URL:      c.Request().RequestURI,
-		Fromip:   c.Request().RemoteAddr,
+		Fromip:   realip, //c.Request().RemoteAddr,
 		DateTime: time.Now(),
 	}
 

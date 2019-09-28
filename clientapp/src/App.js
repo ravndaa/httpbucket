@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom'
+import { HashRouter as Router, Route, Link } from 'react-router-dom'
 import { Container } from "reactstrap";
 import './App.css';
 import NavBar from './Components/Navbar';
@@ -16,7 +16,9 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/about" component={About} />
           <Route path="/inspect/:id" component={Inspect} />
+          
         </Container>
+        
       </Container>
     </Router>
   );

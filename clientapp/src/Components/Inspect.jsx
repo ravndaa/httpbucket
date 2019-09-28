@@ -15,10 +15,12 @@ export default class Inspect extends Component {
         this.ws = undefined;
     }
 
-
+    wsPrefix = () => {
+        return window.document.location.protocol === "https:" ? "wss" : "ws"
+    }
 
     connectWS = () => {
-        const prefix = window.document.location.protocol === "https" ? "wss" : "ws"
+        const prefix = this.wsPrefix();
         const base = window.location.host;
         const uri = `${prefix}://${base}/bucket/ws?id=${this.props.match.params.id}`
         //const uri = "ws://localhost:1323/api/ws?id=" + this.props.match.params.id
