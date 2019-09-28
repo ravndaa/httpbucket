@@ -20,7 +20,7 @@ render() {
     const data = this.props.data;
     const headers = data.headers;
     return(
-        <Container>
+        <Container className="mt-3">
             <Card >
                 <CardHeader className="bg-info">
                     <span className="font-weight-bold">{data.method}</span> 
