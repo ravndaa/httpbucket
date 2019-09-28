@@ -8,7 +8,7 @@ RUN yarn && yarn build
 FROM golang:alpine as gobuilder
 RUN apk add git ca-certificates --update
 #RUN mkdir /usr/local/go/src/github.com/app
-COPY *.go /go/src/app
+COPY *.go /go/src/app/
 WORKDIR /go/src/app
 
 RUN go get
