@@ -22,7 +22,12 @@ export default class Inspect extends Component {
     connectWS = () => {
         const prefix = this.wsPrefix();
         const base = window.location.host;
-        const uri = `${prefix}://${base}/bucket/ws?id=${this.props.match.params.id}`
+        let uri = `${prefix}://${base}/bucket/ws?id=${this.props.match.params.id}`
+        if(window.location.host === "localhost:3000")
+        {
+            console.log("LOCAL DEV");
+            uri = "ws://localhost:1323/bucket/ws?id=" + this.props.match.params.id
+        }
         //const uri = "ws://localhost:1323/api/ws?id=" + this.props.match.params.id
         this.ws = new WebSocket(uri)
 
