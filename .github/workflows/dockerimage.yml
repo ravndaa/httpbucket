@@ -9,10 +9,7 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-
     - uses: actions/checkout@v1
-    - name: environment
-      run: echo ${{name}}
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ravndal/spuky:latest
     - name: Docker Tag image
