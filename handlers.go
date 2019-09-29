@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
@@ -15,10 +17,39 @@ func handler(c echo.Context) error {
 }
 */
 
+func handlerLogin(c echo.Context) error {
+	username := c.FormValue("username")
+	password := c.FormValue("password")
+
+	// Throws unauthorized error
+	if username != *adminusername || password != *adminpassword {
+		return echo.ErrUnauthorized
+	}
+
+	// Create token
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	// Set claims
+	claims := token.Claims.(jwt.MapClaims)
+	claims["name"] = *adminusername
+	claims["admin"] = true
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte(*jwtsecret))
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"token": t,
+	})
+}
+
 func handlerCreateBucket(c echo.Context) error {
 	//id := c.Param("id")
 
-	id := String(9)
+	id := RandomString(9)
 
 	myDB[id] = new([]ReqMsg)
 

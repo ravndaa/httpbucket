@@ -1,6 +1,9 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -39,8 +42,17 @@ type memDB struct {
 
 var hub *Hub
 var myDB map[string]*[]ReqMsg
+var adminusername, adminpassword, jwtsecret *string
 
 func main() {
+
+	// Load username and password from cmd
+	adminusername = flag.String("username", "admin@local", "Admin user.")
+	adminpassword = flag.String("password", "admin", "Admin password.")
+	jwtsecret = flag.String("jwtsecret", "AVCerFDvgdrev%dsgsvdxfgsrwgsdg", "JWT signing secret.")
+	flag.Parse()
+	fmt.Printf("%s => %s => %s \n", *adminusername, *adminpassword, *jwtsecret)
+
 	myDB = make(map[string]*[]ReqMsg)
 
 	e := echo.New()
@@ -57,14 +69,11 @@ func main() {
 	bucket.POST("/:id", handlePost)
 	bucket.GET("/:id", handlePost)
 	bucket.GET("/ws", handleWs)
-	/*
-		e.POST("/bucket/:id", handlePost)
-		e.GET("/bucket/:id", handleGet)
-		e.GET("/ws", handleWs)
-	*/
+
 	api := e.Group("/api")
 	api.GET("/bucket/:id", handlerGetRequests)
 	api.POST("/createbucket", handlerCreateBucket)
+	api.POST("/login", handlerLogin)
 	//api.GET("/ws", handleWs)
 
 	//e.File("/*", "wwwroot/index.html")
