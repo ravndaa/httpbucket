@@ -16,3 +16,10 @@ type ReqMsg struct {
 	Fromip   string      `json:"fromip"`
 	DateTime time.Time   `json:"datetime"`
 }
+
+//Bucket hmm
+type Bucket struct {
+	ID     string `json:"id"`
+	Online bool   `json:"online"`
+	Stats  int    `json:"stats"`
+}

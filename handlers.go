@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -16,6 +17,54 @@ func handler(c echo.Context) error {
 	return nil
 }
 */
+
+func handlerDeleteBucket(c echo.Context) error {
+	id := c.Param("id")
+	client := hub.clients[id]
+	hub.unregister <- client
+
+	delete(myDB, id)
+	return c.String(200, id)
+}
+
+func handlerDeleteClient(c echo.Context) error {
+	id := c.Param("id")
+	client := hub.clients[id]
+	hub.unregister <- client
+	return c.String(200, id)
+}
+
+func handlerDeleteMsgs(c echo.Context) error {
+	id := c.Param("id")
+	clean := []ReqMsg{}
+	myDB[id] = &clean
+	return c.String(200, id)
+}
+
+func handlerListBuckets(c echo.Context) error {
+	resp := []Bucket{}
+	for item, msgs := range myDB {
+		online := false
+		if _, ok := hub.clients[item]; ok {
+
+			online = true
+		}
+		stats := len(*msgs)
+		fmt.Println(stats)
+		bucket := Bucket{
+			ID:     item,
+			Online: online,
+			Stats:  stats,
+		}
+		resp = append(resp, bucket)
+	}
+	return c.JSON(200, &resp)
+}
+
+func handlerListClients(c echo.Context) error {
+
+	return c.JSON(200, &hub.clients)
+}
 
 func handlerLogin(c echo.Context) error {
 	username := c.FormValue("username")

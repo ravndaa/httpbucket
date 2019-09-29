@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 import {Container, Spinner} from 'reactstrap';
+import AdminListBuckets from "./AdminListBuckets";
 
 export default class Admin extends Component {
 constructor(props) {
@@ -19,8 +19,10 @@ componentDidMount() {
 render() {
 
     return(
-        <Container className="text-center">
-            <div><Spinner color="primary"/> Under development</div>
+        <Container >
+            
+            <AdminListBuckets />
+           
         </Container>
     )
 }

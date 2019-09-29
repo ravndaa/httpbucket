@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Request from "./Request";
 import {Spinner, Container} from 'reactstrap';
+import BucketInfo from "./BucketInfo";
 
 export default class Inspect extends Component {
     constructor(props) {
@@ -95,13 +96,13 @@ export default class Inspect extends Component {
                 return (<Request key={index} data={item} />)
             })
         } else {
-            showThis = <div><Spinner color="primary"/> Waiting for requests.</div>
+            showThis = <div className="text-center"><Spinner color="primary"/> Waiting for requests.</div>
         }
         const url = window.location.protocol+"//"+window.location.host+"/bucket/"+id
         return (
             <Container>
+                <BucketInfo url={url} id={id} />
                 
-                Url= {url} <br />
                 {showThis}
             </Container>
         )

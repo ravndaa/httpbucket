@@ -74,6 +74,11 @@ func main() {
 	api.GET("/bucket/:id", handlerGetRequests)
 	api.POST("/createbucket", handlerCreateBucket)
 	api.POST("/login", handlerLogin)
+	api.GET("/listbuckets", handlerListBuckets)
+	api.GET("/listclients", handlerListClients)
+	api.DELETE("/bucket/:id", handlerDeleteBucket)
+	api.DELETE("/client/:id", handlerDeleteClient)
+	api.DELETE("/msgs/:id", handlerDeleteMsgs)
 	//api.GET("/ws", handleWs)
 
 	//e.File("/*", "wwwroot/index.html")
