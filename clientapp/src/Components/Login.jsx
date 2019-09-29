@@ -31,6 +31,7 @@ export default class Login extends Component {
       handleLoginResponse = (response) => {
         localStorage.setItem("token", response.token);
         //this.setState({isLoggedIn:true});
+        this.props.authservice.setIsAuth();
         window.location.replace("/#/admin");
       }
 

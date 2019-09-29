@@ -12,7 +12,7 @@ function getToken() {
             return false;
         }
         const decodedjwt = jwt_decode(jwt);
-        console.log(decodedjwt);
+        
         return true;
     } catch (error) {
         console.log(error)
