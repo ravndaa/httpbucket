@@ -1,6 +1,5 @@
 # spuky
-![actionbuild](https://github.com/ravndaa/spuky/.github/workflows/dockerimage.yml/badge.svg)
-[![Actions Status](https://github.com/ravndaa/spuky/workflows/dockerimage/badge.svg)](https://github.com/ravndaa/spuky/actions)
+![](https://github.com/ravndaa/spuky/workflows/.github/workflows/dockerimage.yml/badge.svg)
 
 Simple HTTP request bin/bucket server easy to run and use.
 
