@@ -2,7 +2,7 @@
 ![](https://github.com/ravndaa/spuky/workflows/.github/workflows/dockerimage.yml/badge.svg)
 ![](https://github.com/ravndaa/spuky/workflows/Docker%20Image%20CI/badge.svg)
 
-![Logo](https://img.icons8.com/dusk/64/000000/scary-tree--v2.png "Logo")
+![Logo](https://img.icons8.com/dusk/64/000000/scary-tree--v2.png "Logo") ### Spuky
 
 Simple HTTP request bin/bucket server easy to run and use.
 
