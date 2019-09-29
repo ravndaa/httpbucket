@@ -1,6 +1,6 @@
 import React, { } from 'react'
 import { Redirect, Route } from "react-router-dom";
-import jwt_decode from 'jwt-decode';
+
 
 
 
@@ -11,7 +11,7 @@ function getToken() {
             
             return false;
         }
-        const decodedjwt = jwt_decode(jwt);
+        
         
         return true;
     } catch (error) {
