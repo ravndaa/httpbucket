@@ -4,6 +4,7 @@ import {Spinner, Container} from 'reactstrap';
 import BucketInfo from "./BucketInfo";
 
 export default class Inspect extends Component {
+    ws = undefined;
     constructor(props) {
         super(props)
 
@@ -11,13 +12,19 @@ export default class Inspect extends Component {
         this.state = {
             connected: false,
             requests: []
+
         }
 
-        this.ws = undefined;
+        
     }
 
     wsPrefix = () => {
         return window.document.location.protocol === "https:" ? "wss" : "ws"
+    }
+
+    closeWS = () => {
+        //this.setState({ connected: false })
+        this.ws.close();
     }
 
     connectWS = () => {
@@ -29,16 +36,24 @@ export default class Inspect extends Component {
             console.log("LOCAL DEV");
             uri = "ws://localhost:1323/bucket/ws?id=" + this.props.match.params.id
         }
+        
+            this.ws = new WebSocket(uri)
+    
         //const uri = "ws://localhost:1323/api/ws?id=" + this.props.match.params.id
-        this.ws = new WebSocket(uri)
-
-        this.ws.onopen = function () {
-            console.log('Connected')
-            //this.setState({ connected: true })
+        this.ws.onerror = () => {
+            this.setState({ connected: false })
         }
-        this.ws.onclose = function () {
+
+        this.ws.onopen = () => {
+            console.log('Connected')
+            this.setState({ connected: true })
+        }
+        this.ws.onclose = () => {
             console.log("closed");
-            //this.setState({ connected: false })
+            if(this.props.history.action !== "PUSH") {
+                this.setState({ connected: false })
+            }
+            
         }
 
         this.ws.onmessage = (evt) => { this.addMsg(evt) };
@@ -68,24 +83,36 @@ export default class Inspect extends Component {
 
 
     componentDidMount() {
-        this.connectWS();
-        this.getRequests();
+        if(this.state.connected !== true) {
+            this.connectWS();
+            this.getRequests();
+        }
+        
+        
     }
 
     componentWillUnmount() {
-        this.ws.close();
+        this.closeWS();
+        console.log(this.props)
     }
+
+    
 
     getRequests = async () => {
         let resp = await fetch(`/api/bucket/${this.props.match.params.id}`)
-        let data = await resp.json();
-
-        this.setState({ requests: data });
+        if(resp.ok) {
+            let data = await resp.json();
+            this.setState({ requests: data });
+        }
+        
         //console.log(data);
     }
 
 
     render() {
+        if(this.state.connected === false) {
+            return (<div>Not Connected</div>)
+        }
         const id = this.props.match.params.id;
         const requests = this.state.requests;
         let showThis = [];

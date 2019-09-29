@@ -16,10 +16,10 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ravndal/spuky:latest
     - name: Docker Tag image
-      run: docker tag ravndal/spuky:latest ravndal/spuky:0.0.1
+      run: docker tag ravndal/spuky:latest ravndal/spuky:0.0.3
     - name: Docker Login
       run: docker login -u ${{secrets.dockerhubuser}} -p ${{secrets.dockerhubpass}}
     - name: Dcoker Push
       run: docker push ravndal/spuky:latest
     - name: Dcoker Push 
-      run: docker push ravndal/spuky:0.0.1
+      run: docker push ravndal/spuky:0.0.3
