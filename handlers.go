@@ -21,7 +21,9 @@ func handler(c echo.Context) error {
 func handlerDeleteBucket(c echo.Context) error {
 	id := c.Param("id")
 	client := hub.clients[id]
-	hub.unregister <- client
+	if client != nil {
+		hub.unregister <- client
+	}
 
 	delete(myDB, id)
 	return c.String(200, id)
@@ -30,7 +32,9 @@ func handlerDeleteBucket(c echo.Context) error {
 func handlerDeleteClient(c echo.Context) error {
 	id := c.Param("id")
 	client := hub.clients[id]
-	hub.unregister <- client
+	if client != nil {
+		hub.unregister <- client
+	}
 	return c.String(200, id)
 }
 
@@ -110,7 +114,7 @@ func handlerGetRequests(c echo.Context) error {
 
 	if _, ok := myDB[id]; !ok {
 
-		return nil
+		return c.NoContent(400)
 	}
 
 	return c.JSON(200, myDB[id])
