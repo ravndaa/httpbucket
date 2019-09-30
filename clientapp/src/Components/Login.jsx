@@ -16,7 +16,7 @@ export default class Login extends Component {
     handlePasswordChange = (event) => { this.setState({ password: event.target.value }) };
 
     handleLoginButton = async () => {
-        const response = await fetch("/api/login", {
+        const response = await fetch("/login", {
           method: 'POST',
           headers: {
             'Content-Type':"application/x-www-form-urlencoded"

@@ -87,6 +87,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	e.POST("/login", handlerLogin)
+
 	// cleaning and maybe rename to "b" instead of "bucket"
 	bucket := e.Group("/bucket")
 	bucket.POST("/:id", handlePost)
@@ -100,7 +102,7 @@ func main() {
 	api.Use(middleware.JWT([]byte(*jwtsecret)))
 	//api.GET("/bucket/:id", handlerGetRequests)
 	//api.POST("/createbucket", handlerCreateBucket)
-	api.POST("/login", handlerLogin)
+	//api.POST("/login", handlerLogin)
 	api.GET("/listbuckets", handlerListBuckets)
 	api.GET("/listclients", handlerListClients)
 	api.DELETE("/bucket/:id", handlerDeleteBucket)
