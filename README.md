@@ -1,9 +1,8 @@
 
 
-[logo]: https://img.icons8.com/dusk/64/000000/scary-tree--v2.png "Logo Title Text 2"
+[logo]: https://img.icons8.com/dusk/64/000000/scary-tree--v2.png "httpBucket"
 
-# ![alt text][logo] spuky
-![](https://github.com/ravndaa/spuky/workflows/.github/workflows/dockerimage.yml/badge.svg)
+# ![alt text][logo] httpBucket
 ![](https://github.com/ravndaa/spuky/workflows/Docker%20Image%20CI/badge.svg)
 
 
@@ -17,9 +16,10 @@ Simple HTTP request bin/bucket server easy to run and use.
  - Build standalone executables.
 
 
+## Build
 
 ## Docker Run
-docker run -d --name spuky --network web spuky:latest
+docker run -d --name httpbucket --network web httpbucket:latest
 
 
 
