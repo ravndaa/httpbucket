@@ -33,6 +33,11 @@ jobs:
       run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-macos .
     - name: Build windows
       run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket.exe .
+  
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
     - name: GitHub Releases windows
       if: startsWith(github.ref, 'refs/tags/')
       env:
