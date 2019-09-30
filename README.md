@@ -16,6 +16,7 @@ Simple HTTP request bin/bucket server easy to run and use.
  - Build standalone executables.
  - check security.
  - UI improvements
+ - persistant data.
 
 
 ## Build
@@ -38,6 +39,7 @@ Simple HTTP request bin/bucket server easy to run and use.
 docker run -d --name httpbucket --network web httpbucket:latest
 
 
+### Learn
 
 # Credits
 
