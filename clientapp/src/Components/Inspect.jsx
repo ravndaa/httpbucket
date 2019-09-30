@@ -99,7 +99,7 @@ export default class Inspect extends Component {
     
 
     getRequests = async () => {
-        let resp = await fetch(`/api/bucket/${this.props.match.params.id}`)
+        let resp = await fetch(`/bucket/list/${this.props.match.params.id}`)
         if(resp.ok) {
             let data = await resp.json();
             this.setState({ requests: data });

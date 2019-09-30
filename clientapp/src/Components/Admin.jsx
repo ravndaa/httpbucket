@@ -1,29 +1,29 @@
 import React, { Component } from "react";
-import {Container} from 'reactstrap';
+import { Container } from 'reactstrap';
 import AdminListBuckets from "./AdminListBuckets";
 
 export default class Admin extends Component {
-constructor(props) {
-super(props)
-this.state = {
-    
-}
-}
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+    }
 
 
-componentDidMount() {
-    
-}
+    componentDidMount() {
+
+    }
 
 
-render() {
+    render() {
 
-    return(
-        <Container >
-            
-            <AdminListBuckets />
-           
-        </Container>
-    )
-}
+        return (
+            <Container >
+
+                <AdminListBuckets />
+
+            </Container>
+        )
+    }
 }

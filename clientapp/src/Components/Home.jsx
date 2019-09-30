@@ -28,7 +28,7 @@ export default class Home extends React.Component {
     }
 
     createBucket = async () => {
-        let res = await fetch("/api/createbucket", {
+        let res = await fetch("/bucket/create", {
             method: "POST",
 
         })

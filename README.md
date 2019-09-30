@@ -14,6 +14,7 @@ Simple HTTP request bin/bucket server easy to run and use.
  - Add Comments.
  - Add an admin page.
  - Build standalone executables.
+ - check security.
 
 
 ## Build

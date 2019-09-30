@@ -14,17 +14,37 @@ export default class AdminListBuckets extends Component {
         this.loadBuckets();
     }
 
+    getToken = () => {
+        try {
+            return localStorage.getItem("token");
+        } catch (error) {
+            return null
+        }
+    }
+
     loadBuckets = async () => {
         // http://localhost:1323/api/listbuckets
-        const resp = await fetch("/api/listbuckets");
-        const data = await resp.json();
-        this.setState({buckets: data});
+        const resp = await fetch("/api/listbuckets",{
+            headers: new Headers({
+                'Authorization': `Bearer ${this.getToken()}`, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }), 
+        });
+        if(resp.ok) {
+            const data = await resp.json();
+            this.setState({buckets: data});
+        }
+        
     }
 
     deleteBucket = async (id) => {
         console.log("Deleting bucket..." + id);
         const resp = await fetch(`/api/bucket/${id}`, {
             method: "DELETE",
+            headers: new Headers({
+                'Authorization': `Bearer ${this.getToken()}`, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }), 
         })
         if(resp.ok) {
             this.loadBuckets();
@@ -35,6 +55,10 @@ export default class AdminListBuckets extends Component {
         console.log("Disconnects client. " + id);
         const resp = await fetch(`/api/client/${id}`, {
             method: "DELETE",
+            headers: new Headers({
+                'Authorization': `Bearer ${this.getToken()}`, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }), 
         })
         if(resp.ok) {
             this.loadBuckets();
@@ -44,6 +68,10 @@ export default class AdminListBuckets extends Component {
         console.log("Resets Msgs " + id);
         const resp = await fetch(`/api/msgs/${id}`, {
             method: "DELETE",
+            headers: new Headers({
+                'Authorization': `Bearer ${this.getToken()}`, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }), 
         })
         if(resp.ok) {
             this.loadBuckets();
