@@ -40,7 +40,7 @@ export default class NavBar extends Component {
 
         return (
             <Navbar color="light" light expand="md" sticky="top" className="shadow">
-                <NavbarBrand tag={Link} to="/"> <img src="/logo.png" width="30" height="30" /> Spuky <span className="h6">{VERSION}</span> </NavbarBrand>
+                <NavbarBrand tag={Link} to="/"> <img alt="logo" src="/logo.png" width="30" height="30" /> httpbucket <span className="h6">{VERSION}</span> </NavbarBrand>
                 <NavbarToggler onClick={this.toggleNavbar} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>

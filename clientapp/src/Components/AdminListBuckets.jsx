@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Card, CardBody, CardHeader, CardText, Table, Button } from 'reactstrap';
+import { Container, Card, CardBody, CardHeader, Table, Button } from 'reactstrap';
 
 export default class AdminListBuckets extends Component {
     constructor(props) {
