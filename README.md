@@ -18,8 +18,19 @@ Simple HTTP request bin/bucket server easy to run and use.
 
 ## Build
 
-### Prereqs
- - go.rice
+### Docker
+- Linux: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o httpbucket .
+- MacOS: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o httpbucket .
+- Windows: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o httpbucket.exe .
+
+### Standalone (Todo: Automate)
+- Run first:
+    - yarn build
+    - copy build to root as wwwroot
+    - rice embed-go
+- Linux: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -o httpbucket .
+- MacOS: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -o httpbucket .
+- Windows: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -o httpbucket.exe .
 
 ## Docker Run
 docker run -d --name httpbucket --network web httpbucket:latest
