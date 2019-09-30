@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Container, Spinner} from 'reactstrap';
+import {Container} from 'reactstrap';
 import AdminListBuckets from "./AdminListBuckets";
 
 export default class Admin extends Component {

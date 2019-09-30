@@ -11,6 +11,7 @@ import Login from './Components/Login';
 import AuthRoute from './Components/AuthRoute';
 import authService from './Services/AuthService';
 import Logout from './Components/Logout';
+import About from './Components/About';
 
 function App() {
   const authservice = authService;
@@ -35,15 +36,3 @@ function App() {
 }
 
 export default App;
-
-
-
-function About() {
-  return (
-    <div>
-      <h3>About</h3>
-      Logo Icon: <a href="https://icons8.com/icon/nPJ-vAuEzUMX/scary-tree">Scary Tree icon by Icons8</a> 
-
-    </div>
-  )
-}

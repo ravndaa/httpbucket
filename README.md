@@ -18,6 +18,9 @@ Simple HTTP request bin/bucket server easy to run and use.
 
 ## Build
 
+### Prereqs
+ - go.rice
+
 ## Docker Run
 docker run -d --name httpbucket --network web httpbucket:latest
 
