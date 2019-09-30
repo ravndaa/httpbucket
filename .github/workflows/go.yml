@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set up Go 1.12
+    - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
-        go-version: 1.12
+        go-version: 1.13
       id: go
 
     - name: Check out code into the Go module directory
@@ -33,3 +33,9 @@ jobs:
       run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-macos .
     - name: Build windows
       run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket.exe .
+    - name: GitHub Releases
+      env:
+        GHR_PATH: "httpbucket.exe"
+        secrets: ${{ secrets.GITHUB_TOKEN }}
+      uses: fnkr/github-action-ghr@v1.1
+
