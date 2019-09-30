@@ -64,10 +64,15 @@ func main() {
 		adminpass = "admin"
 	}
 
+	tokensecret := os.Getenv("secret")
+	if tokensecret == "" {
+		tokensecret = "AVCerFDvgdrev%dsgsvdxfgsrwgsdg"
+	}
+
 	// Load username and password from cmd
 	adminusername = flag.String("username", adminuser, "Admin user.")
 	adminpassword = flag.String("password", adminpass, "Admin password.")
-	jwtsecret = flag.String("jwtsecret", "AVCerFDvgdrev%dsgsvdxfgsrwgsdg", "JWT signing secret.")
+	jwtsecret = flag.String("jwtsecret", tokensecret, "JWT signing secret.")
 	flag.Parse()
 	fmt.Printf("%s => %s => %s \n", *adminusername, *adminpassword, *jwtsecret)
 
