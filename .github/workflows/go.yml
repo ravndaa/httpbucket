@@ -34,6 +34,7 @@ jobs:
     - name: Build windows
       run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket.exe .
     - name: GitHub Releases
+      if: startsWith(github.ref, 'refs/tags/')
       env:
         GHR_PATH: "httpbucket.exe"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
