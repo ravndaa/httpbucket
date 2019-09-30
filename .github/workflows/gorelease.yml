@@ -1,15 +1,12 @@
 name: Go
 on: 
-  push:
-    branches:    
-      - release-*
+  release:
+    types: [published, created]
 jobs:
-
-  build:
-    name: Build
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
