@@ -3,3 +3,4 @@ test
 wwwroot
 rice-box.go
 standalone
+httpBucket.postman_collection.json

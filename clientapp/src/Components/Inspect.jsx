@@ -127,9 +127,10 @@ export default class Inspect extends Component {
             showThis = <div className="text-center"><Spinner color="primary"/> Waiting for requests.</div>
         }
         const url = window.location.protocol+"//"+window.location.host+"/b/"+id
+        const postmanurl = window.location.protocol+"//"+window.location.host+"/b/createpostman/"+id
         return (
             <Container>
-                <BucketInfo url={url} id={id} />
+                <BucketInfo url={url} postmanurl={postmanurl} id={id} />
                 
                 {showThis}
             </Container>

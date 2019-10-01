@@ -5,8 +5,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"net/url"
+	"strings"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/labstack/echo"
 )
@@ -70,4 +75,226 @@ func handleBucketRequest(c echo.Context) error {
 	reqJSON, _ := json.Marshal(req)
 	hub.clients[data].send <- []byte(reqJSON)
 	return c.String(200, data)
+}
+
+/*
+Generate Postman v2.1 file.
+Should probably created a template.json file and changed some variables.. =)
+Can't find enought info from request, so will this needs to be a post request with some data.. =)
+*/
+func handleBucketPostmanFile(c echo.Context) error {
+	data := c.Param("id")
+	//urlquery := c.QueryParam("url")
+	var err error
+
+	requestData := new(CreatePostmanRequest)
+	if err = c.Bind(requestData); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	// working
+	fullurl := requestData.URL
+	//baseRequestInfo := c.Request()
+	urldata, _ := url.Parse(fullurl)
+	urlSchema := urldata.Scheme
+	fmt.Println(urldata.EscapedPath())
+
+	hostArray := strings.Split(urldata.Hostname(), ".")
+	port := urldata.Port()
+	path := strings.Split(strings.Replace(urldata.EscapedPath(), "/", "", 1), "/")
+	guid := uuid.New()
+
+	//hostArray := []string{}
+
+	postmanInfo := PostmanInfo{
+		ID:     fmt.Sprintf("%s", guid),
+		Name:   fmt.Sprintf("httpBucket - %s", data),
+		Schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+	}
+
+	postmanItems := []PostmanItem{
+		PostmanItem{
+			Name: "httpBucket-POST",
+			Request: PostmanItemRequest{
+				Method: "POST",
+				Header: []PostmanItemRequestHeader{
+					PostmanItemRequestHeader{
+						Key:   "Content-Type",
+						Name:  "Content-Type",
+						Value: "text/plain",
+						Type:  "text",
+					},
+					PostmanItemRequestHeader{
+						Key:   "httpBucket",
+						Value: "isRocking",
+						Type:  "text",
+					},
+				},
+				Body: PostmanItemRequestBody{
+					Mode: "raw",
+					Raw:  "httpBucket Rocks",
+					Options: PostmanItemRequestBodyOptions{
+						Raw: PostmanItemRequestBodyOptionsRaw{
+							Language: "text",
+						},
+					},
+				},
+				URL: PostmanItemRequestURL{
+					Raw:      fullurl,
+					Protocol: urlSchema,
+					Host:     hostArray,
+					Port:     port,
+					Path:     path,
+				},
+				Description: "httpBucket POST Request",
+			},
+			Response: []PostmanItemResponse{},
+		},
+		PostmanItem{
+			Name: "httpBucket-Get",
+			Request: PostmanItemRequest{
+				Method: "GET",
+				Header: []PostmanItemRequestHeader{
+					PostmanItemRequestHeader{
+						Key:   "Content-Type",
+						Name:  "Content-Type",
+						Value: "text/plain",
+						Type:  "text",
+					},
+					PostmanItemRequestHeader{
+						Key:   "httpBucket",
+						Value: "isRocking",
+						Type:  "text",
+					},
+				},
+				URL: PostmanItemRequestURL{
+					Raw:      fullurl,
+					Protocol: urlSchema,
+					Host:     hostArray,
+					Port:     port,
+					Path:     path,
+				},
+				Description: "httpBucket GET Request",
+			},
+			Response: []PostmanItemResponse{},
+		},
+		PostmanItem{
+			Name: "httpBucket-PUT",
+			Request: PostmanItemRequest{
+				Method: "PUT",
+				Header: []PostmanItemRequestHeader{
+					PostmanItemRequestHeader{
+						Key:   "Content-Type",
+						Name:  "Content-Type",
+						Value: "text/plain",
+						Type:  "text",
+					},
+					PostmanItemRequestHeader{
+						Key:   "httpBucket",
+						Value: "isRocking",
+						Type:  "text",
+					},
+				},
+				Body: PostmanItemRequestBody{
+					Mode: "raw",
+					Raw:  "httpBucket Rocks",
+					Options: PostmanItemRequestBodyOptions{
+						Raw: PostmanItemRequestBodyOptionsRaw{
+							Language: "text",
+						},
+					},
+				},
+				URL: PostmanItemRequestURL{
+					Raw:      fullurl,
+					Protocol: urlSchema,
+					Host:     hostArray,
+					Port:     port,
+					Path:     path,
+				},
+				Description: "httpBucket PUT Request",
+			},
+			Response: []PostmanItemResponse{},
+		},
+		PostmanItem{
+			Name: "httpBucket-PATCH",
+			Request: PostmanItemRequest{
+				Method: "PATCH",
+				Header: []PostmanItemRequestHeader{
+					PostmanItemRequestHeader{
+						Key:   "Content-Type",
+						Name:  "Content-Type",
+						Value: "text/plain",
+						Type:  "text",
+					},
+					PostmanItemRequestHeader{
+						Key:   "httpBucket",
+						Value: "isRocking",
+						Type:  "text",
+					},
+				},
+				Body: PostmanItemRequestBody{
+					Mode: "raw",
+					Raw:  "httpBucket Rocks",
+					Options: PostmanItemRequestBodyOptions{
+						Raw: PostmanItemRequestBodyOptionsRaw{
+							Language: "text",
+						},
+					},
+				},
+				URL: PostmanItemRequestURL{
+					Raw:      fullurl,
+					Protocol: urlSchema,
+					Host:     hostArray,
+					Port:     port,
+					Path:     path,
+				},
+				Description: "httpBucket PATCH Request",
+			},
+			Response: []PostmanItemResponse{},
+		},
+		PostmanItem{
+			Name: "httpBucket-DELETE",
+			Request: PostmanItemRequest{
+				Method: "DELETE",
+				Header: []PostmanItemRequestHeader{
+					PostmanItemRequestHeader{
+						Key:   "Content-Type",
+						Name:  "Content-Type",
+						Value: "text/plain",
+						Type:  "text",
+					},
+					PostmanItemRequestHeader{
+						Key:   "httpBucket",
+						Value: "isRocking",
+						Type:  "text",
+					},
+				},
+				Body: PostmanItemRequestBody{
+					Mode: "raw",
+					Raw:  "httpBucket Rocks",
+					Options: PostmanItemRequestBodyOptions{
+						Raw: PostmanItemRequestBodyOptionsRaw{
+							Language: "text",
+						},
+					},
+				},
+				URL: PostmanItemRequestURL{
+					Raw:      fullurl,
+					Protocol: urlSchema,
+					Host:     hostArray,
+					Port:     port,
+					Path:     path,
+				},
+				Description: "httpBucket DELETE Request",
+			},
+			Response: []PostmanItemResponse{},
+		},
+	}
+
+	postmanData := Postman{
+		Info: postmanInfo,
+		Item: postmanItems,
+	}
+
+	return c.JSON(200, postmanData)
 }

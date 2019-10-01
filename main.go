@@ -103,8 +103,16 @@ func main() {
 
 	//
 	bucket := e.Group("/b")
-	bucket.POST("/:id", handleBucketRequest)
-	bucket.GET("/:id", handleBucketRequest)
+	/*
+		bucket.POST("/:id", handleBucketRequest)
+		bucket.GET("/:id", handleBucketRequest)
+		bucket.DELETE("/:id", handleBucketRequest)
+		bucket.PATCH("/:id", handleBucketRequest)
+		bucket.PUT("/:id", handleBucketRequest)
+	*/
+	bucket.Any("/:id", handleBucketRequest)
+
+	bucket.GET("/createpostman/:id", handleBucketPostmanFile)
 	bucket.GET("/ws", handleWs)
 	bucket.POST("/create", handlerBucketCreate)
 	bucket.GET("/list/:id", handlerGetBucketRequests)
