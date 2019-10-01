@@ -12,5 +12,5 @@ Having multiple accounts and repository servers, we can add settings for each re
 ## Local branching
 
 ### Delete local branch
-`git branch -d *branchname*` only works if pushed and merged to remote branche. 
-`git branch -D *branchnme*` dont care about push and merge status.
+ - `git branch -d *branchname*` only works if pushed and merged to remote branche. 
+ - `git branch -D *branchnme*` dont care about push and merge status.
