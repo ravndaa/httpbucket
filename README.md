@@ -18,6 +18,7 @@ Simple HTTP request bin/bucket server easy to run and use.
  - UI improvements
  - persistant data.
  - explore and change to gomod
+ - learn to use github issues +++ 
 
 
 
