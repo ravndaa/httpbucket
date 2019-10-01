@@ -30,11 +30,11 @@ export default class Inspect extends Component {
     connectWS = () => {
         const prefix = this.wsPrefix();
         const base = window.location.host;
-        let uri = `${prefix}://${base}/bucket/ws?id=${this.props.match.params.id}`
+        let uri = `${prefix}://${base}/b/ws?id=${this.props.match.params.id}`
         if(window.location.host === "localhost:3000")
         {
             console.log("LOCAL DEV");
-            uri = "ws://localhost:1323/bucket/ws?id=" + this.props.match.params.id
+            uri = "ws://localhost:1323/b/ws?id=" + this.props.match.params.id
         }
         
             this.ws = new WebSocket(uri)
@@ -45,11 +45,11 @@ export default class Inspect extends Component {
         }
 
         this.ws.onopen = () => {
-            console.log('Connected')
+            //console.log('Connected')
             this.setState({ connected: true })
         }
         this.ws.onclose = () => {
-            console.log("closed");
+            //console.log("closed");
             if(this.props.history.action !== "PUSH") {
                 this.setState({ connected: false })
             }
@@ -99,7 +99,7 @@ export default class Inspect extends Component {
     
 
     getRequests = async () => {
-        let resp = await fetch(`/bucket/list/${this.props.match.params.id}`)
+        let resp = await fetch(`/b/list/${this.props.match.params.id}`)
         if(resp.ok) {
             let data = await resp.json();
             this.setState({ requests: data });
@@ -123,9 +123,10 @@ export default class Inspect extends Component {
                 return (<Request key={index} data={item} />)
             })
         } else {
+            
             showThis = <div className="text-center"><Spinner color="primary"/> Waiting for requests.</div>
         }
-        const url = window.location.protocol+"//"+window.location.host+"/bucket/"+id
+        const url = window.location.protocol+"//"+window.location.host+"/b/"+id
         return (
             <Container>
                 <BucketInfo url={url} id={id} />

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Container } from 'reactstrap';
 import AdminListBuckets from "./AdminListBuckets";
 
+
 export default class Admin extends Component {
     constructor(props) {
         super(props)
@@ -15,13 +16,12 @@ export default class Admin extends Component {
 
     }
 
-
     render() {
-
+       
         return (
             <Container >
-
-                <AdminListBuckets />
+                
+                <AdminListBuckets showAlert/>
 
             </Container>
         )

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"net/http"
 	"os"
 
 	rice "github.com/GeertJohan/go.rice"
+	"github.com/dimiro1/banner"
 
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
@@ -17,20 +19,22 @@ var (
 	upgrader = websocket.Upgrader{}
 )
 
+/*
+// Delete this ..
 func sendAll(msg string) {
-	/*	for _, item := range clients {
-
-		}
-	*/
 	hub.broadcast <- []byte(msg)
 }
-
+// Delete this ..
 func sendMsg(c echo.Context) error {
 	msg := c.FormValue("msg")
 	go sendAll(msg)
 	return c.NoContent(201)
 }
+*/
 
+// maybe implement a simple security check.
+// could be a problem with how websocket is implemented.
+// what happens when to browser connect to same bucket
 func handleWs(c echo.Context) error {
 	id := c.QueryParam("id")
 	if _, ok := myDB[id]; ok {
@@ -53,17 +57,22 @@ var UseRice string
 
 func main() {
 
+	isEnabled := true
+	isColorEnabled := true
+	banner.Init(os.Stdout, isEnabled, isColorEnabled, bytes.NewBufferString(logoBanner))
 	//Environment variables
 	adminuser := os.Getenv("adminusername")
 	if adminuser == "" {
 		adminuser = "admin@local"
 	}
 
+	// set a minimum rule for this
 	adminpass := os.Getenv("adminpassword")
 	if adminpass == "" {
 		adminpass = "admin"
 	}
 
+	// set a minimum rule for this
 	tokensecret := os.Getenv("secret")
 	if tokensecret == "" {
 		tokensecret = "AVCerFDvgdrev%dsgsvdxfgsrwgsdg"
@@ -76,45 +85,46 @@ func main() {
 	flag.Parse()
 	fmt.Printf("%s => %s => %s \n", *adminusername, *adminpassword, *jwtsecret)
 
+	// create the memory map for buckets and requests.
 	myDB = make(map[string]*[]ReqMsg)
 
 	e := echo.New()
 	e.HideBanner = true
 
+	// Start the hub...
 	hub = newHub()
 	go hub.run()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.POST("/login", handlerLogin)
+	// handle login requeste..
+	e.POST("/login", adminhandlerLogin)
 
-	// cleaning and maybe rename to "b" instead of "bucket"
-	bucket := e.Group("/bucket")
-	bucket.POST("/:id", handlePost)
-	bucket.GET("/:id", handlePost)
+	//
+	bucket := e.Group("/b")
+	bucket.POST("/:id", handleBucketRequest)
+	bucket.GET("/:id", handleBucketRequest)
 	bucket.GET("/ws", handleWs)
-	bucket.POST("/create", handlerCreateBucket)
-	bucket.GET("/list/:id", handlerGetRequests)
+	bucket.POST("/create", handlerBucketCreate)
+	bucket.GET("/list/:id", handlerGetBucketRequests)
 
-	// Todo: add protection.
+	// Admin api, need jwt token.
 	api := e.Group("/api")
 	api.Use(middleware.JWT([]byte(*jwtsecret)))
-	//api.GET("/bucket/:id", handlerGetRequests)
-	//api.POST("/createbucket", handlerCreateBucket)
-	//api.POST("/login", handlerLogin)
-	api.GET("/listbuckets", handlerListBuckets)
-	api.GET("/listclients", handlerListClients)
-	api.DELETE("/bucket/:id", handlerDeleteBucket)
-	api.DELETE("/client/:id", handlerDeleteClient)
-	api.DELETE("/msgs/:id", handlerDeleteMsgs)
+	api.GET("/listbuckets", adminhandlerListBuckets)
+	api.GET("/listclients", adminhandlerListClients)
+	api.DELETE("/bucket/:id", adminhandlerDeleteBucket)
+	api.DELETE("/client/:id", adminhandlerDeleteClient)
+	api.DELETE("/msgs/:id", adminhandlerDeleteMsgs)
 
-	// change so that docker does not use this...
 	// Some magic tricks that checks if embedded and uses that, or else uses "./wwwroot" next to it.
+	// this needs build variable -ldflags "-X main.UseRice=true"
 	if UseRice == "true" {
-		rice.Debug = true
+		// docker build will not use this.
+		// check if this could be a *security* issue, if we don't disable look for folder "wwwroot" next to the executable. (rice feature)
+		rice.Debug = true // make this possible to override.
 		assetHandler := http.FileServer(rice.MustFindBox("./wwwroot").HTTPBox())
-		// serves the index.html from rice
 		e.GET("/*", echo.WrapHandler(assetHandler))
 	} else {
 		e.Static("/", "./wwwroot")
