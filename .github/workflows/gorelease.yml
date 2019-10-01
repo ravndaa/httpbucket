@@ -34,7 +34,8 @@ jobs:
               curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
               dep ensure
           fi
-
+      - name: workaround rice
+        run: chmod +x && ./rice embed-go
       - name: Build linux
         run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-linux .
       - name: Build macos
