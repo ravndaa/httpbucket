@@ -1,51 +1,64 @@
 name: Go
-on: 
+on:
   release:
     types: [published]
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12..x]
     steps:
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+      
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          version: ${{ matrix.node_version }}
+      
+      - name: yarn install, yarn lint, yarn test, yarn build
+        run: cd "./clientapp" && yarn install && yarn build
+      
+      - name: copy to parent
+        run: cp -R ./build/ ../wwwroot
 
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          fi
 
-    - name: Build linux
-      run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-linux .
-    - name: Build macos
-      run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-macos .
-    - name: Build windows
-      run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket.exe .
-    - name: GitHub Releases windows
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GHR_PATH: "httpbucket.exe"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: fnkr/github-action-ghr@v1.1
-    - name: GitHub Releases linux
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GHR_PATH: "httpbucket-linux"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: fnkr/github-action-ghr@v1.1
-    - name: GitHub Release macos
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GHR_PATH: "httpbucket-macos"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: fnkr/github-action-ghr@v1.1
-
+      - name: Build linux
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-linux .
+      - name: Build macos
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-macos .
+      - name: Build windows
+        run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket.exe .
+      - name: GitHub Releases windows
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_PATH: "httpbucket.exe"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: fnkr/github-action-ghr@v1.1
+      - name: GitHub Releases linux
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_PATH: "httpbucket-linux"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: fnkr/github-action-ghr@v1.1
+      - name: GitHub Release macos
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_PATH: "httpbucket-macos"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: fnkr/github-action-ghr@v1.1
