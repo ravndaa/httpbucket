@@ -25,10 +25,7 @@ jobs:
           version: ${{ matrix.node_version }}
       
       - name: yarn install, yarn lint, yarn test, yarn build
-        run: cd "./clientapp" && yarn install && yarn build
-      
-      - name: copy to parent
-        run: cp -R ./build/ ../wwwroot
+        run: cd "./clientapp" && yarn install && yarn build && cp -R ./build/ ../wwwroot
 
       - name: Get dependencies
         run: |
