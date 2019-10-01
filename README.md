@@ -45,6 +45,6 @@ docker run -d --name httpbucket --network web httpbucket:latest
 
 ### Learn
 
-# Credits
-
-Icon: <a href="https://icons8.com/icon/nPJ-vAuEzUMX/scary-tree">Scary Tree icon by Icons8</a>
+# Thanks to
+    - https://github.com/GeertJohan/go.rice
+    - Icon: <a href="https://icons8.com/icon/nPJ-vAuEzUMX/scary-tree">Scary Tree icon by Icons8</a>
