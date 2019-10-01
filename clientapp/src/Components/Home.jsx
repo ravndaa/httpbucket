@@ -17,32 +17,37 @@ export default class Home extends React.Component {
         const existing = localStorage.getItem("buckets");
         bucketStore.push(existing)
 
-        if(existing === null) {
-            
+        if (existing === null) {
+
             localStorage.setItem("buckets", bucket);
         } else {
             const newStore = bucketStore.concat(bucket);
             localStorage.setItem("buckets", newStore);
         }
-        
+
     }
 
     createBucket = async () => {
-        let res = await fetch("/bucket/create", {
+        let res = await fetch("/b/create", {
             method: "POST",
 
         })
+        if (res.ok) {
+            let data = await res.json()
+            
+            this.storeBucket(data.id);
+            this.setState({ id: data.id })
+            this.setState({ redirect: true })
+        } else {
+            // implement error message...
+        }
 
-        let data = await res.text()
-        console.log(data)
-        this.storeBucket(data);
-        this.setState({id: data})
-        this.setState({redirect: true})
+
         //window.location = "/inspect/" + data
     }
 
     render() {
-        if(this.state.redirect === true) {
+        if (this.state.redirect === true) {
             return (<Redirect to={`/inspect/${this.state.id}`} />)
         }
         return (
@@ -51,11 +56,11 @@ export default class Home extends React.Component {
                     <h1 className="display-3">Simple HTTP bucket!</h1>
                     <p className="lead">Create a bucket for receiving http POST messages.</p>
                     <hr className="my-2" />
-                    
+
                     <Container className="text-center">
                         <Button color="success" onClick={this.createBucket}> Create Bucket</Button>
                     </Container>
-                    
+
                 </Jumbotron>
             </div>
         )
