@@ -12,8 +12,6 @@ Simple HTTP request bin/bucket server easy to run and use.
 ## TODO
  - Major Code cleaning.
  - Add Comments.
- - Add an admin page.
- - Build standalone executables.
  - check security.
  - UI improvements
     - Convert to Typescript

@@ -89,8 +89,11 @@ export default class AdminListBuckets extends Component {
                 return (<tr key={item.id}><th scope="row">{item.id}</th><th>{online}</th><th>{stats}</th><th><Button onClick={() =>this.deleteBucket(item.id)} color="danger">Delete</Button> <Button onClick={() => this.disconnectClient(item.id)} color="warning">Disconnect</Button> <Button onClick={() => this.resetMsgs(item.id)} color="warning">Reset Msgs</Button></th></tr>);
             })
         }
+
+        
         return (
             <Container className="mb-4">
+                {alert}
                 <Card>
                     <CardHeader>Buckets</CardHeader>
                     <CardBody>

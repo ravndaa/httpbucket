@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode';
 class AuthService {
 
     _isAuth = false;
-    //test
+    //test an "event hub"
     _callbacks = [];
     _nextSubscriptionId = 0;
 
@@ -29,7 +29,7 @@ class AuthService {
         }
     }
 
-    //Test
+    //test an "event hub"
     
     
     
