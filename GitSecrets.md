@@ -5,9 +5,11 @@ Tips and tricks for signing commits. Check this link: https://help.github.com/en
 
 ### Global Git Settings
 If there is only one accounts or this is most often used, set it globally and then override on each repository. (not sure if this is true. =)
+- https://help.github.com/en/articles/setting-your-username-in-git
 
 ### Repository Git Settings
 Having multiple accounts and repository servers, we can add settings for each repository.
+- set local user for repository: https://help.github.com/en/articles/setting-your-username-in-git
 
 ## Local branching
 
