@@ -1,9 +1,8 @@
 name: BuildDocker
 
 on: 
-  push:
-    branches:    
-      - master
+  release:
+    types: [published]
 
 jobs:
   
@@ -16,10 +15,10 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ravndal/httpbucket:latest
     - name: Docker Tag image
-      run: docker tag ravndal/httpbucket:latest ravndal/httpbucket:0.0.4
+      run: docker tag ravndal/httpbucket:latest ravndal/httpbucket:0.0.5
     - name: Docker Login
       run: docker login -u ${{secrets.dockerhubuser}} -p ${{secrets.dockerhubpass}}
     - name: Dcoker Push
       run: docker push ravndal/httpbucket:latest
     - name: Dcoker Push 
-      run: docker push ravndal/httpbucket:0.0.4
+      run: docker push ravndal/httpbucket:0.0.5
