@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12..x]
+        node-version: [12.x]
     steps:
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
