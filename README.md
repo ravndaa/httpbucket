@@ -16,6 +16,7 @@ Simple HTTP request bin/bucket server easy to run and use.
  - Build standalone executables.
  - check security.
  - UI improvements
+    - Convert to Typescript
  - persistant data.
  - explore and change to gomod
  - learn to use github issues +++ 
