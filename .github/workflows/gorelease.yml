@@ -36,7 +36,7 @@ jobs:
           fi
 
       - name: Build linux
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-linux .
+        run: go get github.com/GeertJohan/go.rice && go get github.com/GeertJohan/go.rice/rice && rice embed-go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-linux .
       - name: Build macos
         run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.UseRice=true" -v -o httpbucket-macos .
       - name: Build windows

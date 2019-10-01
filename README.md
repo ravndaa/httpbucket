@@ -17,6 +17,7 @@ Simple HTTP request bin/bucket server easy to run and use.
  - check security.
  - UI improvements
  - persistant data.
+ - explore and change to gomod
 
 
 
