@@ -11,8 +11,8 @@ import (
 	"github.com/dimiro1/banner"
 
 	"github.com/gorilla/websocket"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 var (
@@ -89,7 +89,7 @@ func main() {
 	myDB = make(map[string]*[]ReqMsg)
 
 	e := echo.New()
-	e.HideBanner = true
+	e.HideBanner = false
 
 	// Start the hub...
 	hub = newHub()
@@ -111,6 +111,7 @@ func main() {
 		bucket.PUT("/:id", handleBucketRequest)
 	*/
 	bucket.Any("/:id", handleBucketRequest)
+	bucket.Any("/:id/*", handleBucketRequest)
 
 	bucket.GET("/createpostman/:id", handleBucketPostmanFile)
 	bucket.GET("/ws", handleWs)
