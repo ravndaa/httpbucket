@@ -7,10 +7,9 @@ on:
 
 jobs:
   
-  env:
-    DOCKERTAG = 0.2.0
-
   build:
+    env:
+      DOCKERTAG = 0.2.0
  
     runs-on: ubuntu-latest
  
