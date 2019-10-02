@@ -1,0 +1,21 @@
+name: PreReleaseBuildDocker
+
+on:
+  push:
+    branches:
+      - release-0.2.*
+
+jobs:
+  
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ravndal/httpbucket:alpha-0.2.0
+    - name: Docker Login
+      run: docker login -u ${{secrets.dockerhubuser}} -p ${{secrets.dockerhubpass}}
+    - name: Dcoker Push 
+      run: docker push ravndal/httpbucket:alpha-0.2.0
