@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,11 +22,21 @@ func handlerBucketCreate(c echo.Context) error {
 	// create a random string used as -id.
 	id := RandomString(9)
 	// create the bucket.
-	myDB[id] = new([]ReqMsg)
 
-	return c.JSON(200, map[string]string{
-		"id": id,
-	})
+	bucket := Bucket{
+		BucketID: id,
+	}
+	fmt.Println(bucket)
+
+	//myDB[id] = new([]ReqMsg)
+	err := db.Save(&bucket)
+
+	if err != nil {
+		fmt.Println(err)
+		return c.String(400, err.Error())
+	}
+
+	return c.JSON(200, bucket)
 }
 
 /*
@@ -36,29 +45,38 @@ func handlerBucketCreate(c echo.Context) error {
 func handlerGetBucketRequests(c echo.Context) error {
 	id := c.Param("id")
 
-	// Check if map of bucket contains the id.
-	if _, ok := myDB[id]; !ok {
+	/*
+		// Check if map of bucket contains the id.
+		if _, ok := myDB[id]; !ok {
 
-		return c.NoContent(400)
-	}
-
-	return c.JSON(200, myDB[id])
+			return c.NoContent(400)
+		}
+		myDB[id]
+	*/
+	var bucket Bucket
+	var requests []ReqMsg
+	err = db.One("BucketID", id, &bucket)
+	err = db.Find("BucketID", id, &requests)
+	bucket.Requests = requests
+	return c.JSON(200, bucket)
 }
 
 func handleBucketRequest(c echo.Context) error {
 	data := c.Param("id")
+	/*
+		if _, ok := myDB[data]; !ok {
 
-	if _, ok := myDB[data]; !ok {
-
-		return echo.ErrBadRequest
-	}
-
+			return echo.ErrBadRequest
+		}
+	*/
+	//var bucket Bucket
 	// Handle IP, often used behind proxy. checked with traefik
 	// add alternative if this is empty.
 	realip := c.Request().Header.Get("X-Forwarded-For")
 
 	body2, _ := ioutil.ReadAll(c.Request().Body)
 	req := ReqMsg{
+		BucketID: data,
 		Client:   c.Request().UserAgent(),
 		Body:     string(body2),
 		Headers:  c.Request().Header,
@@ -70,10 +88,28 @@ func handleBucketRequest(c echo.Context) error {
 		DateTime: time.Now(),
 	}
 	//add request to bucket.
-	*myDB[data] = append(*myDB[data], req)
+	//*myDB[data] = append(*myDB[data], req)
+
+	err := db.Save(&req)
+	if err != nil {
+		return c.String(400, err.Error())
+	}
+
+	//_ = db.UpdateField(&Bucket{BucketID: data}, "Requests", req)
 
 	reqJSON, _ := json.Marshal(req)
-	hub.clients[data].send <- []byte(reqJSON)
+
+	for client, bucketid := range hub.clientsv2 {
+		if bucketid == data {
+			client.send <- []byte(reqJSON)
+		}
+	}
+	/*
+		if _, ok := hub.clients[data]; ok {
+
+			hub.clients[data].send <- []byte(reqJSON)
+		}
+	*/
 	return c.String(200, data)
 }
 

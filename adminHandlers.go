@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,11 +21,31 @@ deletes bucket and disconnects the wsclient
 */
 func adminhandlerDeleteBucket(c echo.Context) error {
 	id := c.Param("id")
-	client := hub.clients[id]
-	if client != nil {
-		hub.unregister <- client
+	for client, bucketid := range hub.clientsv2 {
+		if bucketid == id {
+			hub.unregister <- client
+		}
 	}
-	delete(myDB, id)
+	/*
+		client := hub.clientsv2[id]
+		if client != nil {
+			hub.unregister <- client
+		}*/
+	bucket := Bucket{}
+	err := db.One("BucketID", id, &bucket)
+
+	if err != nil {
+		fmt.Println("GET:", err.Error())
+		return c.String(400, err.Error())
+	}
+	fmt.Println(&bucket)
+	err = db.DeleteStruct(&bucket)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(400, err.Error())
+	}
+
+	//delete(myDB, id)
 
 	return c.JSON(200, map[string]string{
 		"id": id,
@@ -36,10 +57,16 @@ disconnects the client from ws hub.
 */
 func adminhandlerDeleteClient(c echo.Context) error {
 	id := c.Param("id")
-	client := hub.clients[id]
-	if client != nil {
-		hub.unregister <- client
+	for client, bucketid := range hub.clientsv2 {
+		if bucketid == id {
+			hub.unregister <- client
+		}
 	}
+	/*
+		client := hub.clients[id]
+		if client != nil {
+			hub.unregister <- client
+		}*/
 	return c.JSON(200, map[string]string{
 		"id": id,
 	})
@@ -51,9 +78,18 @@ deletes all messages for the bucket.
 func adminhandlerDeleteMsgs(c echo.Context) error {
 	id := c.Param("id")
 	// create a empty ReqMsg
-	clean := []ReqMsg{}
+	//clean := []ReqMsg{}
 	// set the empty reqmsg to bucket id..
-	myDB[id] = &clean
+	//myDB[id] = &clean
+	requests := []ReqMsg{}
+	err := db.Find("BucketID", id, &requests)
+	for _, item := range requests {
+		db.Delete("ReqMsg", item.ID)
+	}
+	if err != nil {
+		fmt.Println(err)
+		return c.String(400, err.Error())
+	}
 	return c.JSON(200, map[string]string{
 		"id": id,
 	})
@@ -63,26 +99,30 @@ func adminhandlerDeleteMsgs(c echo.Context) error {
 return all buckets in memory.
 */
 func adminhandlerListBuckets(c echo.Context) error {
-	resp := []Bucket{}
-	// loop the memory bucket. not a problem now, but if many entries is added, this could be a problem...
-	for item, msgs := range myDB {
-		// check if the ws-client is still active
-		online := false
-		if _, ok := hub.clients[item]; ok {
+	var resp []Bucket
+	/*
+		// loop the memory bucket. not a problem now, but if many entries is added, this could be a problem...
+		for item, msgs := range myDB {
+			// check if the ws-client is still active
+			online := false
+			if _, ok := hub.clients[item]; ok {
 
-			online = true
+				online = true
+			}
+			// get count of messages.
+			stats := len(*msgs)
+			// new bucket item.
+			bucket := Bucket{
+				ID:     item,
+				Online: online,
+				Stats:  stats,
+			}
+			// add the bucket item to memory.
+			resp = append(resp, bucket)
 		}
-		// get count of messages.
-		stats := len(*msgs)
-		// new bucket item.
-		bucket := Bucket{
-			ID:     item,
-			Online: online,
-			Stats:  stats,
-		}
-		// add the bucket item to memory.
-		resp = append(resp, bucket)
-	}
+	*/
+
+	db.All(&resp)
 	return c.JSON(200, &resp)
 }
 
@@ -92,7 +132,7 @@ there is bigger problem if this not exists.
 */
 func adminhandlerListClients(c echo.Context) error {
 
-	return c.JSON(200, &hub.clients)
+	return c.JSON(200, &hub.clientsv2)
 }
 
 /*
@@ -102,8 +142,10 @@ func adminhandlerLogin(c echo.Context) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
+	var me User
+	db.One("Username", username, &me)
 	// Throws unauthorized error
-	if username != *adminusername || password != *adminpassword {
+	if username != me.Username || password != me.Password {
 		return echo.ErrUnauthorized
 	}
 
@@ -112,7 +154,7 @@ func adminhandlerLogin(c echo.Context) error {
 
 	// Set claims
 	claims := token.Claims.(jwt.MapClaims)
-	claims["name"] = *adminusername
+	claims["name"] = me.Username
 	claims["admin"] = true
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix() // make it possible to override.
 

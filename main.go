@@ -8,8 +8,8 @@ import (
 	"os"
 
 	rice "github.com/GeertJohan/go.rice"
+	"github.com/asdine/storm"
 	"github.com/dimiro1/banner"
-
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -37,23 +37,35 @@ func sendMsg(c echo.Context) error {
 // what happens when to browser connect to same bucket
 func handleWs(c echo.Context) error {
 	id := c.QueryParam("id")
-	if _, ok := myDB[id]; ok {
+	var bucket Bucket
+	err := db.One("BucketID", id, &bucket)
+	if err == nil {
 		serveWs(hub, c, id)
 		return nil
 	}
+	/*
+		if _, ok := myDB[id]; ok {
+			serveWs(hub, c, id)
+			return nil
+		}
+	*/
+	fmt.Println("DAMN" + err.Error())
 
-	return c.NoContent(400)
+	return c.String(400, err.Error())
 }
 
 type memDB struct {
 }
 
 var hub *Hub
-var myDB map[string]*[]ReqMsg
+
+//var myDB map[string]*[]ReqMsg
 var adminusername, adminpassword, jwtsecret *string
 
 // UseRice variable from the build process => -ldflags "-X main.UseRice=true"
 var UseRice string
+var db *storm.DB
+var err error
 
 func main() {
 
@@ -86,10 +98,29 @@ func main() {
 	fmt.Printf("%s => %s => %s \n", *adminusername, *adminpassword, *jwtsecret)
 
 	// create the memory map for buckets and requests.
-	myDB = make(map[string]*[]ReqMsg)
+	//myDB = make(map[string]*[]ReqMsg)
+
+	db, err = storm.Open("./data/app.db")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	user := User{
+		Username: *adminusername,
+		Password: *adminpassword,
+	}
+	err = db.Save(&user)
+	if err != nil {
+		fmt.Println(err)
+	}
+	user2 := User{
+		Username: "stian@local",
+		Password: "admin",
+	}
+	err = db.Save(&user2)
 
 	e := echo.New()
-	e.HideBanner = false
+	e.HideBanner = true
 
 	// Start the hub...
 	hub = newHub()

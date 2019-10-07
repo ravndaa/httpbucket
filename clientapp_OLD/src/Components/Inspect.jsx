@@ -102,7 +102,7 @@ export default class Inspect extends Component {
         let resp = await fetch(`/b/list/${this.props.match.params.id}`)
         if(resp.ok) {
             let data = await resp.json();
-            this.setState({ requests: data });
+            this.setState({ requests: data.requests });
         }
         
         //console.log(data);

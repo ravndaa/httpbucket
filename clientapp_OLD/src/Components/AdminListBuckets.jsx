@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Container, Card, CardBody, CardHeader, Table, Button } from 'reactstrap';
+import 'status-indicator/styles.css'
 
 export default class AdminListBuckets extends Component {
     constructor(props) {
@@ -84,9 +85,9 @@ export default class AdminListBuckets extends Component {
         let bucketlist;
         if(buckets !== null){
             bucketlist = buckets.map((item) => {
-                const online = item.online.toString();
-                const stats = item.stats === 0 ? "0" : item.stats;
-                return (<tr key={item.id}><th scope="row">{item.id}</th><th>{online}</th><th>{stats}</th><th><Button onClick={() =>this.deleteBucket(item.id)} color="danger">Delete</Button> <Button onClick={() => this.disconnectClient(item.id)} color="warning">Disconnect</Button> <Button onClick={() => this.resetMsgs(item.id)} color="warning">Reset Msgs</Button></th></tr>);
+                
+                const stats = item.requests === null ? "0" : item.requests.length;
+                return (<tr key={item.bucketid}><th scope="row">{item.bucketid}</th><th>false</th><th>{stats}</th><th><Button onClick={() =>this.deleteBucket(item.bucketid)} color="danger">Delete</Button> <Button onClick={() => this.disconnectClient(item.bucketid)} color="warning">Disconnect</Button> <Button onClick={() => this.resetMsgs(item.bucketid)} color="warning">Reset Msgs</Button></th></tr>);
             })
         }
 

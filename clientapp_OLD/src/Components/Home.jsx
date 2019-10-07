@@ -35,8 +35,8 @@ export default class Home extends React.Component {
         if (res.ok) {
             let data = await res.json()
             
-            this.storeBucket(data.id);
-            this.setState({ id: data.id })
+            //this.storeBucket(data.id);
+            this.setState({ id: data.bucketid })
             this.setState({ redirect: true })
         } else {
             // implement error message...
