@@ -22,7 +22,7 @@ FROM scratch
 WORKDIR /app
 COPY --from=gobuilder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=gobuilder /go/src/app/main /app
-COPY --from=gobuilder /go/src/app/data/ /app/
+COPY --from=gobuilder /go/src/app/data/ /app/data/
 COPY --from=web /usr/src/build /app/wwwroot
 
 VOLUME ["/app/data"]
