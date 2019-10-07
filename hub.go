@@ -58,7 +58,7 @@ func (h *Hub) run() {
 					}
 				}
 			*/
-			for client, _ := range h.clientsv2 {
+			for client := range h.clientsv2 {
 				select {
 				case client.send <- message:
 				default:

@@ -21,5 +21,8 @@ WORKDIR /app
 COPY --from=gobuilder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=gobuilder /go/src/app/main /app
 COPY --from=web /usr/src/build /app/wwwroot
+
+RUN mkdir /app/data
+VOLUME ["/app/data"]
 EXPOSE 1323
 CMD ["/app/main"]
