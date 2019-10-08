@@ -5,8 +5,7 @@ import BucketRequests from "./BucketRequests";
 
 const styles = {
     root: {
-
-
+        marginBottom: '4rem',
     },
 };
 
@@ -29,7 +28,7 @@ class BucketContainer extends Component {
         const url = window.location.protocol + "//" + window.location.host + "/b/" + id
 
         return (
-            <div>
+            <div className={this.props.classes.root}>
                 <BucketInfo url={url} id={id} />
                 <BucketRequests bucketid={id} history={this.props.history} match={this.props.match} location={this.props.location} />
             </div>

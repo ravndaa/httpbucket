@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.4.3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-emojione": "^5.0.1",
     "react-router-dom": "^5.1.0",
     "react-scripts": "3.2.0",
     "status-indicator": "^1.0.9"

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles, Container, TextField, Button } from "@material-ui/core";
+import { withStyles, Container, TextField, Button, FormGroup } from "@material-ui/core";
 import { withApp } from "../../Services/AuthContext";
 
 const styles = {
@@ -53,38 +53,46 @@ class Login extends Component {
 
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault(); 
+        
+    }
+
     render() {
-        return (<Container>
-            <form className={this.props.classes.container} noValidate autoComplete="off">
-                <TextField
-                    id="standard-email-input"
-                    label="Email"
-                    className={this.props.classes.textField}
-                    type="email"
-                    value={this.state.email}
-                    onChange={this.handleEmailChange}
-                    autoComplete="current-email"
-                    margin="normal"
-                />
+        return (
+            <Container maxWidth="sm">
+                
+                <form onSubmit={this.handleSubmit}>
+                <FormGroup>
+                    <TextField
+                        id="standard-email-input"
+                        label="Email"
+                        className={this.props.classes.textField}
+                        type="email"
+                        value={this.state.email}
+                        onChange={this.handleEmailChange}
+                        autoComplete="current-email"
+                        margin="normal"
+                    />
 
-                <TextField
-                    id="standard-password-input"
-                    label="Password"
-                    className={this.props.classes.textField}
-                    type="password"
-                    value={this.state.password}
-                    onChange={this.handlePasswordChange}
-                    autoComplete="current-password"
-                    margin="normal"
-                />
+                    <TextField
+                        id="standard-password-input"
+                        label="Password"
+                        className={this.props.classes.textField}
+                        type="password"
+                        value={this.state.password}
+                        onChange={this.handlePasswordChange}
+                        autoComplete="current-password"
+                        margin="normal"
+                    />
 
 
-                <Button variant="outlined" onClick={this.handleLoginButton} className={this.props.classes.button}>
-                    Login
-                </Button>
-
-            </form>
-        </Container>)
+                    <Button type="submit" variant="outlined" onClick={this.handleLoginButton} className={this.props.classes.button}>
+                        Login
+                    </Button>
+                </FormGroup>
+                </form>
+            </Container>)
     }
 }
 

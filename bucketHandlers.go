@@ -61,6 +61,7 @@ func handlerGetBucketRequests(c echo.Context) error {
 	return c.JSON(200, bucket)
 }
 
+// store and send messages received for a bucket
 func handleBucketRequest(c echo.Context) error {
 	data := c.Param("id")
 	/*

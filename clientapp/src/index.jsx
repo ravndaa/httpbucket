@@ -16,9 +16,33 @@ const theme = createMuiTheme({
     },
 });
 
+function hasToken () {
+    try {
+        
+        const jwt = localStorage.getItem("token");
+        
+        if(jwt === null) {
+            
+            return false;
+        }else {
+            return true;
+        }
+        
+        
+    } catch (error) {
+        console.log("DAMN: " +error)
+        return false;
+    }
+}
+
+
+const data = {
+    isAuth: hasToken(),
+}
 ReactDOM.render(
+    
     <ThemeProvider theme={theme}>
-        <AppProvider>
+        <AppProvider value={data}>
             <App />
         </AppProvider>
     </ThemeProvider>,

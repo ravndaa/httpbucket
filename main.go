@@ -153,6 +153,8 @@ func main() {
 	api := e.Group("/api")
 	api.Use(middleware.JWT([]byte(*jwtsecret)))
 	api.GET("/listbuckets", adminhandlerListBuckets)
+	api.GET("/bucketMessages/:id", adminhandlerListBucketMessages)
+	api.GET("/bucketClients/:id", adminhandlerListBucketClients)
 	api.GET("/listclients", adminhandlerListClients)
 	api.DELETE("/bucket/:id", adminhandlerDeleteBucket)
 	api.DELETE("/client/:id", adminhandlerDeleteClient)

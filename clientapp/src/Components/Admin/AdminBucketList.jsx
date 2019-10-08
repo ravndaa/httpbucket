@@ -1,11 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { createStyles, withStyles, Card, CardHeader, CardContent, Table, TableBody, TableCell, TableRow, TableHead, Button } from "@material-ui/core";
 import { grey, red } from "@material-ui/core/colors";
+import AdminBucketMessages from "./AdminBucketMessages";
+import AdminBucketClients from "./AdminBucketClients";
 
 const styles = (theme) =>
     createStyles({
         root: {
-
+            marginBottom: '4rem',
         },
         cardheader: {
             backgroundColor: grey[200],
@@ -13,10 +15,10 @@ const styles = (theme) =>
         },
         table: {
             minWidth: 650,
-          },
-          actionbuttons: {
-              marginLeft: '1rem',
-          },
+        },
+        actionbuttons: {
+            marginLeft: '1rem',
+        },
     });
 
 
@@ -27,6 +29,9 @@ class AdminBucketList extends Component {
         super(props)
         this.state = {
             buckets: [],
+            showMoreInfo: false,
+            activeBucketID: '',
+            bucketMessages: [],
         }
     }
 
@@ -59,25 +64,30 @@ class AdminBucketList extends Component {
         const resp = await fetch(`/api/bucket/${id}`, {
             method: "DELETE",
             headers: new Headers({
-                'Authorization': `Bearer ${this.getToken()}`, 
+                'Authorization': `Bearer ${this.getToken()}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
-              }), 
+            }),
         })
-        if(resp.ok) {
+        if (resp.ok) {
             this.loadBuckets();
+        }
+        if(this.state.activeBucketID === id) {
+            this.setState({activeBucketID: ''})
+            this.setState({showMoreInfo: false})
         }
         
     }
+
     disconnectClient = async (id) => {
         console.log("Disconnects client. " + id);
         const resp = await fetch(`/api/client/${id}`, {
             method: "DELETE",
             headers: new Headers({
-                'Authorization': `Bearer ${this.getToken()}`, 
+                'Authorization': `Bearer ${this.getToken()}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
-              }), 
+            }),
         })
-        if(resp.ok) {
+        if (resp.ok) {
             this.loadBuckets();
         }
     }
@@ -86,13 +96,56 @@ class AdminBucketList extends Component {
         const resp = await fetch(`/api/msgs/${id}`, {
             method: "DELETE",
             headers: new Headers({
-                'Authorization': `Bearer ${this.getToken()}`, 
+                'Authorization': `Bearer ${this.getToken()}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
-              }), 
+            }),
         })
-        if(resp.ok) {
+        if (resp.ok) {
             this.loadBuckets();
+            
         }
+    }
+
+    
+
+
+    handleRowClick = (e, row) => {
+        if (e.target.classList.contains("MuiButton-label")) {
+            // do nothing, make the button action work.
+        } else {
+            this.toggleInfo(row);
+            
+        }
+    }
+
+    toggleInfo = (row) => {
+        if((row.bucketid !== '' && this.state.activeBucketID === '') || row.bucketid !== this.state.activeBucketID) {
+            // nasty nesting, a better way?
+            this.setState({showMoreInfo: false})
+            this.setState({activeBucketID: ''}, () => {
+                this.setState({activeBucketID: row.bucketid}, () => {
+                    this.setState({showMoreInfo: true})
+                })
+            }) 
+            
+            
+        }
+        else if(row.bucketid === this.state.activeBucketID) {
+            this.setState({showMoreInfo: false})
+            this.setState({activeBucketID: ''})
+            
+        } 
+    }
+    
+    Clients = () => {
+        return (
+            <AdminBucketClients bucketid={this.state.activeBucketID} />
+        )
+    }
+    Messages = () => {
+        return (
+            <AdminBucketMessages bucketid={this.state.activeBucketID} />
+        )
     }
 
     componentDidMount() {
@@ -110,19 +163,17 @@ class AdminBucketList extends Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell># ID</TableCell>
-                                    <TableCell >Actions</TableCell>
+                                    <TableCell align="right"></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {rows.map(row => (
-                                    <TableRow key={row.bucketid}>
+                                    <TableRow onClick={(e) => this.handleRowClick(e, row)} hover key={row.bucketid}>
                                         <TableCell component="th" scope="row">
                                             {row.bucketid}
                                         </TableCell>
-                                        <TableCell>
-                                            <Button variant="outlined">Show Online Clients</Button>
-                                            <Button className={this.props.classes.actionbuttons} variant="outlined">Show Messages</Button>
-                                            <DeleteButton onClick={() =>this.deleteBucket(row.bucketid)} className={this.props.classes.actionbuttons} variant="outlined">Delete</DeleteButton>
+                                        <TableCell align="right">
+                                            <DeleteButton onClick={() => this.deleteBucket(row.bucketid)} className={this.props.classes.actionbuttons} variant="outlined">Delete</DeleteButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -132,6 +183,14 @@ class AdminBucketList extends Component {
                     </CardContent>
 
                 </Card>
+
+                {this.state.showMoreInfo && (
+                    <Fragment>
+                        <this.Clients />
+
+                        <this.Messages />
+                    </Fragment>
+                )}
             </div>
         )
     }

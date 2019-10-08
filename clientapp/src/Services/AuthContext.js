@@ -1,21 +1,18 @@
 import React from "react";
 
-export const AppContext = React.createContext(
-{
-    appContext: {
-        isAuth: false,
-        setAuth: () => {}
-    }
-}
-);
+export const AppContext = React.createContext();
 
 export class AppProvider extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isAuth: false,
-            setAuth: this.setAuth.bind(this),
+            //setAuth: this.setAuth.bind(this),
         }
+    }
+
+    componentDidMount() {
+        this.setAuth(this.props.value.isAuth)
     }
 
     setAuth = (isAuth) => {
@@ -25,7 +22,7 @@ export class AppProvider extends React.Component {
 
     render() {
         return (
-            <AppContext.Provider value={{appContext:{...this.state}}}>
+            <AppContext.Provider value={{appContext:{isAuth:this.state.isAuth, setAuth: this.setAuth}}}>
                 {this.props.children}
             </AppContext.Provider>
         )

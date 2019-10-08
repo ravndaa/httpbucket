@@ -100,30 +100,34 @@ return all buckets in memory.
 */
 func adminhandlerListBuckets(c echo.Context) error {
 	var resp []Bucket
-	/*
-		// loop the memory bucket. not a problem now, but if many entries is added, this could be a problem...
-		for item, msgs := range myDB {
-			// check if the ws-client is still active
-			online := false
-			if _, ok := hub.clients[item]; ok {
-
-				online = true
-			}
-			// get count of messages.
-			stats := len(*msgs)
-			// new bucket item.
-			bucket := Bucket{
-				ID:     item,
-				Online: online,
-				Stats:  stats,
-			}
-			// add the bucket item to memory.
-			resp = append(resp, bucket)
-		}
-	*/
 
 	db.All(&resp)
 	return c.JSON(200, &resp)
+}
+
+func adminhandlerListBucketMessages(c echo.Context) error {
+	id := c.Param("id")
+
+	var bucket Bucket
+	var requests []ReqMsg
+	err = db.One("BucketID", id, &bucket)
+	err = db.Find("BucketID", id, &requests)
+	bucket.Requests = requests
+	return c.JSON(200, requests)
+}
+
+func adminhandlerListBucketClients(c echo.Context) error {
+	id := c.Param("id")
+	clients := []string{}
+
+	for client, bucketid := range hub.clientsv2 {
+		if bucketid == id {
+			ip := client.conn.LocalAddr().String()
+			clients = append(clients, ip)
+		}
+	}
+
+	return c.JSON(200, clients)
 }
 
 /*

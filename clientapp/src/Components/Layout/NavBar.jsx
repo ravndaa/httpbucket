@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -57,26 +57,42 @@ class NavBar extends Component {
 
 
     componentDidMount() {
-
+        
 
     }
 
+    logoutButton = () => {
+        try {
+            localStorage.clear("token");
+            this.props.appContext.setAuth(false);
+            window.location = '/';  // Reloads site.
+        } catch (error) {
+            
+        }
+    }
+
+    toggleDrawer = () => {
+        const isopen = this.state.open ? false : true;
+        this.setState({ open: isopen });
+      }
 
     render() {
         return (
             <ElevationScroll>
                 <AppBar className={this.props.classes.appBar} position="sticky">
                     <Toolbar>
+                    {this.props.appContext.isAuth && (
                         <IconButton onClick={this.props.toggleDrawer} edge="start" className={this.props.classes.menuButton} color="inherit" aria-label="menu">
                             <MenuIcon color="secondary" />
                         </IconButton>
+                    )}
                         <Typography variant="h6" className={this.props.classes.title}>
 
                             <RouterLink to="/" className={this.props.classes.logolink}>
                                 <Grid container justify="flex-start" alignItems="center" >
                                 <Avatar alt="logo" src={logo} className={this.props.classes.avatar} />
                                     httpBucket
-                                            </Grid>
+                                </Grid>
                             </RouterLink>
                         </Typography>
                         <Grid>
@@ -86,7 +102,10 @@ class NavBar extends Component {
                             {!this.props.appContext.isAuth ? (
                                 <Button component={RouterLink} to="/login" color="inherit" > Login</Button>
                             ) : (
+                                <Fragment>
                                     <Button component={RouterLink} to="/admin" color="inherit">Admin</Button>
+                                    <Button onClick={() => this.logoutButton()} color="inherit">Logout</Button>
+                                </Fragment>
                                 )}
                         </Grid>
 
